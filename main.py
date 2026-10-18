@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 import yaml
 import os
@@ -6,6 +7,10 @@ from dotenv import dotenv_values
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse(url="/effective-config")
 
 def parse_bool(v):
     if isinstance(v, bool): return v
@@ -47,3 +52,4 @@ def get_config(request: Request):
 
     config["api_key"] = "****" # Masking requirement
     return config
+
